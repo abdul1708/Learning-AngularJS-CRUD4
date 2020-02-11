@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html ng-app="myapp">
+<head>
+	<title>CRUD</title>
+	<script type="text/javascript" src="js/angular.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+</head>
+<body ng-controller="productController">
+
+<div class="container">
+	<h3>Informasi Produk</h3>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Name</th>
+				<th>Price</th>
+				<th>Quantity</th>
+				<th>OPTION</th>
+			</tr>
+		</thead>
+		<tbody ng-repeat="product in listProducts">
+			<tr>
+				<td>{{product.id | uppercase}}</td>
+				<td>{{product.name}}</td>
+				<td>{{product.price}}</td>
+				<td>{{product.quantity}}</td>
+				<td align="left">
+					<button type="button" class="btn btn-md btn-danger" ng-click="del(product.id)"><span class="glyphicon glyphicon-remove"></span></button> 
+					<button type="button" class="btn btn-md btn-info" ng-click="selectEdit(product.id)"><span class="glyphicon glyphicon-edit"></span></button> 
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h3>Tambah Produk</h3>
+	<form role="form">
+		<div class="form-group">
+			<label>ID :</label>
+			<input type="text" class="form-control" ng-model="id">     
+		</div>
+		<div class="form-group">
+			<label>Name :</label>
+			<input type="text" class="form-control" ng-model="name">     
+		</div>
+		<div class="form-group">
+			<label>Price :</label>
+			<input type="text" class="form-control" ng-model="price">     
+		</div>
+		<div class="form-group">
+			<label>Quantity :</label>
+			<input type="text" class="form-control" ng-model="quantity">     
+		</div>
+		<div class="form-group">
+			<button type="button" class="btn btn-md btn-success" ng-click="add()"><span class="glyphicon glyphicon-plus"></span></button>   
+			<button type="button" class="btn btn-md btn-info" ng-click="edit()"><span class="glyphicon glyphicon-edit"></span></button>  
+			<button type="button" class="btn btn-md btn-danger" ng-click="reset()"><span class="glyphicon glyphicon-remove"></span></button>    
+		</div>
+	</form>
+</div>
+
+
+
+
+<script type="text/javascript">
+	var myapp=angular.module('myapp',[]);
+
+	myapp.controller('productController', function($scope){
+		$scope.listProducts=[
+			{id:'p01', name:'Smartphone', price:4000000, quantity:4},
+			{id:'p02', name:'DVD-ROOM', price:5000000, quantity:5}
+		];
+		$scope.reset=function () {
+			$scope.id='';
+			$scope.name='';
+			$scope.price='';
+			$scope.quantity='';
+		};
+		$scope.edit=function () {
+			var index=getSelectedIndex($scope.id);
+			$scope.listProducts[index].name=$scope.name;
+			$scope.listProducts[index].price=$scope.price;
+			$scope.listProducts[index].quantity=$scope.quantity;
+			alert('Data berhasil diEdit!');	 
+		};
+		$scope.add=function () {
+			$scope.listProducts.push({
+				id:$scope.id, name:$scope.name, price:$scope.price, quantity:$scope.quantity
+			});	
+			$scope.id='';
+			$scope.name='';
+			$scope.price='';
+			$scope.quantity='';
+			alert('Data berhasil diTambah!');
+		};
+		$scope.selectEdit=function (id) {
+			var index=getSelectedIndex(id);
+			var product=$scope.listProducts[index];
+			$scope.id = product.id;
+			$scope.name = product.name;
+			$scope.price = product.price;
+			$scope.quantity = product.quantity;
+		};
+		$scope.del=function (id) {
+			var result=confirm('Apa yakin ingin diHapus?');
+			if (result===true) {
+				var index =getSelectedIndex(id);
+				$scope.listProducts.splice(index, 1);
+			}
+		};
+		function getSelectedIndex(id) {
+			for (var i = 0; i < $scope.listProducts.length; i++)
+					if ($scope.listProducts[i].id==id)
+						return i;	
+			return -1;
+		};
+	});
+</script>
+</body>
+</html>
